@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="imgs/favicon.ico">
+  <title>HirainITD</title>
+  <script type="text/javascript" src="3rd_part/jquery/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="js/threejs/three.min.js"></script>
+  <script type="text/javascript" src="js/threejs/js/controls/OrbitControls.js"></script>
+  <script type="text/javascript" src="js/webcam.js"></script>
+  <script type="text/javascript" src="js/echarts.min.js"></script>
+  <script type="text/javascript" src="js/echarts-gl.min.js"></script>
+  <script type="text/javascript" src="js/dataTool.min.js"></script>
+  <script src="js/protobuf.js"></script>
+  
+  <style>
+    body{
+      background-color: #000;
+      margin: 0;
+      overflow: hidden;
+    }
+    #main{
+      position: relative;
+    }
+    .camera-display{
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+    }
+    .time-display{
+      position: absolute;
+      bottom: 50px;
+      right: 90px;
+      margin-top: 10px;
+      margin-left: 65px;
+      color: yellow;
+      font-size: 20px;
+    }
+    .display-left{
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #1e90ff;
+      font-size: 20px;
+      line-height: 18px;
+    }
+    .bottomInfo{
+      position: absolute;
+      top: 380px;
+      left: 20px;
+      color: lime;
+      font-size: 20px;
+      line-height: 18px;
+    }
+    .LeftQuality, .RightQuality{
+      color: darkorchid;
+    }
+    .pointer1, .pointer2{
+      display: block;
+      position: absolute;
+      top: 45px;
+      right: 67px;
+      transform-origin: 50% 100%;
+    }
+    .sa{
+      position: absolute;
+      right: 5px;
+      top: 20px;
+    }
+    .speedInfo{
+      position: absolute;
+      width: 200px; 
+      height: 200px;
+      top: 20px;
+      right: 210px;
+    }
+    .InfoTab{
+      position: absolute;
+      width: 400px;
+      height: 170px;
+      color: yellow;
+      right: 500px;
+      bottom: 30px;
+      font-size: 20px;
+      line-height: 18px;
+    }
+    .PosTable{
+      position: absolute;
+      width: 400px;
+      height: 170px;
+      color: yellow;
+      right: 500px;
+      bottom: 100px;
+      font-size: 20px;
+      line-height: 18px;
+    }
+    .parameter{
+      width: 120px;
+    }
+    .Tbox{
+      color: #1e90ff;
+      width: 120px;
+    }
+    .PositionTab{
+      color: lime;
+      width: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="main">
+   <div class="camera-display"></div> 
+   
+   <div class="InfoTab">
+      <table class="infoTab" border="2"> 
+        <tr>
+          <th class="parameter">参数\类型</th>
+          <th class="Tbox">Tbox</th>
+          <th class="PositionTab">Position</th>
+          <th class="GroundTruth">GrdTruth</th>
+        </tr>
+        <tr>
+          <td class="parameter">Lon</td>
+          <td class="TboxLon Tbox">N/A</td>
+          <td class="PositionLon PositionTab">N/A</td>
+          <td class="GroundLon GroundTab">N/A</td>
+
+        </tr>
+        <tr>
+          <td class="parameter">Lat</td>
+          <td class="TboxLat Tbox">N/A</td>
+          <td class="PositionLat PositionTab">N/A</td>
+          <td class="GroundLat GroundTab">N/A</td>
+
+        </tr>
+        <tr>
+          <td class="parameter">Heading</td>
+          <td class="TboxHeading Tbox">N/A</td>
+          <td class="PositionHeading PositionTab">N/A</td>
+          <td class="GroundHeading GroundTab">N/A</td>
+
+        </tr>
+        <tr>
+          <td class="parameter">Status</td>
+          <td class="TboxStatus Tbox">N/A, N/A</td>
+          <td class="PositionStatus PositionTab">N/A</td>
+          <td class="GroundStatus GroundTab">N/A, N/A</td>
+
+        </tr>
+      </table>
+      <div class="time-display"></div>
+   </div>
+   <div class="PosTable">
+    <table class="posTable" border="2">
+      <tr>
+        <th>pathid</th>
+        <td class="pos_pathid1">N/A</td>
+        <td class="pos_pathid2">N/A</td>
+        <td class="pos_pathid3">N/A</td>
+        <td class="pos_pathid4">N/A</td>
+
+      </tr>
+      <tr>
+        <th>offset</th>
+        <td class="pos_offset1">N/A</td>
+        <td class="pos_offset2">N/A</td>
+        <td class="pos_offset3">N/A</td>
+        <td class="pos_offset4">N/A</td>
+
+      </tr>
+    </table>
+   </div>
+
+   <div class="display-left">
+      <span>PosSize: </span>
+      <span class="PosSize">N/A</span>
+      <br></br>
+      <span>MapRecStatus: </span>
+      <span class="MapRecStatus">N/A</span>
+      <br></br>
+      <span>InstanceId: </span>
+      <span class="InstanceId">N/A</span>
+      <br></br>
+      <span>TotalLane: </span>
+      <span class="TotalLane">N/A</span>
+      <br></br>
+      <span>lane_offset: </span>
+      <span class="lane_offset">N/A</span>
+      <br></br>
+      <span>lane_endoffset: </span>
+      <span class="lane_endoffset">N/A</span>
+      <br></br>
+      <span>FunctionalRoadClass: </span>
+      <span class="FunctionalRoadClass">N/A</span>
+      <br></br>
+      <span>NodeFlag: </span>
+      <span class="FormOfWay">N/A</span>
+      <br></br>
+      <span>Tunnel: </span>
+      <span class="Tunnel">N/A</span>
+      <br></br>
+      <span>SpecialSituation: </span>
+      <span class="SpecialSituation">N/A</span>
+      <br></br>
+   </div>
+   <div class="bottomInfo">
+    <span>LocPathID: </span>
+    <span class="LocPathID">N/A</span>
+    <br></br>
+    <span>LocLaneID: </span>
+    <span class="LocLaneID">N/A</span>
+    <br></br>
+    <!-- <span>LocStatus: </span>
+    <span class="LocStatus">N/A</span>
+    <br></br> -->
+    <span>PathDetcMode: </span>
+    <span class="PathDetcMode">N/A</span>
+    <br></br>
+    <span>LaneDetcMode: </span>
+    <span class="LaneDetcMode">N/A</span>
+    <br></br>
+    <span>MapMatchMode: </span>
+    <span class="MapMatchMode">N/A</span>
+    <br></br>
+    <span class="LeftQuality">LeftQuality: </span>
+    <span class="LeftQuality">N/A</span>
+    <br></br>
+    <span class="RightQuality">RightQuality: </span>
+    <span class="RightQuality">N/A</span>
+   </div>
+   <div class="speedInfo">
+    <div id="container" style="height: 100%;width: 100%;"></div>
+   </div>
+   <div class="sa">
+     <img src="imgs/yellowAxis1.png" alt="ss">
+     <img src="imgs/pointer1.png" alt="pointer" class="pointer1">
+     <img src="imgs/pointer2.png" alt="pointer" class="pointer2">
+   </div>
+  </div> 
+</body>
+
+<script type="text/javascript" src="js/threejs/js/loaders/BinaryLoader.js"></script>
+<script type="text/javascript" src="js/action.js"></script>
+<script type="text/javascript">
+  Webcam.set({
+    width:80,
+    height:60,
+    image_format: 'jpeg',
+    jpeg_quality: 90
+  });
+  Webcam.attach( '.camera-display' );
+</script>
+<script type="text/javascript" src="js/index2.js"></script>
+</html>

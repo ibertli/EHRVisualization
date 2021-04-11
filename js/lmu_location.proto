@@ -1,0 +1,167 @@
+/**
+ * Define protobuf for LMU_LOCATION
+ * lmu_location.proto version : 1.0.1
+ * protoc version : 3.5.1
+ */
+
+// [START declaration]
+syntax = "proto2";
+package lmu.location;
+
+// Do not set LITE_RUNTIME
+// option optimize_for = LITE_RUNTIME;
+
+// [START messages]
+
+enum EhrStatus {
+  MAPREC_SUCCESS = 0;
+  MAPREC_POS_ERROR = 1;
+  MAPREC_MAP_ERROR = 2;
+  MAPREC_PATHID_ERROR = 3;
+  MAPREC_LANE_ERROR = 4;
+  MAPREC_RANGE_ERROR_1 = 5;
+  MAPREC_RANGE_ERROR_2 = 6;
+  MAPREC_LINE_ERROR = 7;
+  MAPREC_LINEGEO_ERROR = 8;
+}
+
+enum NetworkState {
+  UNKNOWN = 0;
+  DISCONNECT = 1;
+  NET_2G = 2;
+  NET_3G = 3;
+  NET_4G = 4;
+  NET_5G = 5;
+  WIFI = 6;
+  LINE = 7;
+}
+
+enum LocStatus {
+  Invalid = 255;
+  DR_Road = 0;
+  DR_Lane = 1;
+  MM_Lane = 2;
+  RTK_Fusn = 4;
+  Full_Fusn = 6;
+}
+
+enum RtkQuality {
+  INVALID = 0;
+  GPS_FIX = 1;
+  DGPS = 2;
+  PPS = 3;
+  RTK = 4;
+  FLOAT_RTK = 5;
+  DR = 6;
+  SIM = 7;
+}
+
+enum MessageType {
+  LocalMap = 0;
+  LocOutput = 1;
+  CamInfo = 2;
+}
+
+message LocOutputGnss {
+  required double lon02 = 1;
+  required double lat02 = 2;
+  required float course = 3;
+  required float speed = 4;
+  required uint32 sv_num = 5;
+  required uint32 year = 6;
+  required uint32 month = 7;
+  required uint32 day = 8;
+  required uint32 hour = 9;
+  required uint32 minute = 10;
+  required uint32 second = 11;
+}
+
+message TboxRTK {
+  required double lon02 = 1;
+  required double lat02 = 2;
+  required double course = 3;
+  required uint32 rtk_quality = 4;
+  required uint32 qdr_calibrate = 5;
+}
+
+message GroundTruth {
+  required double lon02 = 1;
+  required double lat02 = 2;
+  required double course = 3;
+  required uint32 pos_flag = 4;
+  required uint32 course_flag = 5;
+}
+
+message LocalMapMessage {
+  required uint32 cyclic_counter = 1;
+  required uint32 pos_offset = 2;
+  required bool map_valid = 3;
+  required EhrStatus EhrErrCode = 4;
+  required uint32 path_id = 5;
+  required uint32 functional_road_class = 6;
+  required uint32 form_of_way = 7;
+  required uint32 tunnel = 8;
+  required uint32 special_situation = 9;
+  required uint32 instance_id = 10;
+  required uint32 total_lane_num = 11;
+  required uint32 lane_offset = 12;
+  required uint32 lane_endoffset = 13;
+  repeated uint32 lane_id = 14;
+  repeated uint32 lane_transition = 15;
+  repeated uint64 lane_type = 16;
+  repeated uint32 line_id = 17;
+  repeated uint32 line_point_num = 18;
+  repeated uint32 line_confidence = 19;
+  repeated uint32 line_type = 20;
+  repeated uint32 line_marking = 21;
+  repeated uint32 line_color = 22;
+  repeated uint32 odd = 23;
+  repeated double line_lon = 24;
+  repeated double line_lat = 25;
+  repeated double line_heading = 26;
+  repeated double line_slope = 27;
+  repeated double line_banking = 28;
+}
+
+message LocOutputMessage {
+  required uint32 time_stamp = 1;
+  required NetworkState net_state = 2;
+  required LocStatus loc_state = 3;
+  required bool path_detection_mode = 4;
+  required uint32 path_id = 5;
+  required bool lane_detection_mode = 6;
+  required uint32 current_lane = 7;
+  required bool map_matching_mode = 8;
+  required uint32 path_errcode = 9;
+  required uint32 lane_errcode = 10;
+  required uint32 map_matching_errcode = 11;
+  required uint32 in_static_odd = 12;
+  required uint32 in_changelane_odd = 13;
+  required LocOutputGnss loc_gnss_data = 14;
+  required TboxRTK tbox_data = 15;
+  required GroundTruth grdth_data = 16;
+  required uint32 pos_size = 17;
+  repeated uint32 pos_pathid = 18;
+  repeated uint32 pos_offset = 19;
+}
+
+message CameraMessage {
+  required uint32 LeftQuality = 1;
+  repeated double CamLeftLineLon = 2;
+  repeated double CamLeftLineLat = 3;
+  required uint32 RightQuality = 4;
+  repeated double CamRightLineLon = 5;
+  repeated double CamRightLineLat = 6;
+}
+
+message Message {
+  required MessageType type = 1;
+  oneof message {
+    LocalMapMessage localmap_data = 2;
+    LocOutputMessage locoutput_data = 3;
+    CameraMessage cam_data = 4;
+  }
+}
+
+
+// [END messages]
