@@ -34,7 +34,7 @@ $ sudo mv EHRVisualization /var/www/html
 
 ## Img
 
-效果图是这样的：https://github.com/ibertli/MusicPlayer/blob/master/images/%E6%95%88%E6%9E%9C%E5%9B%BE.png
+![Image text](https://github.com/ibertli/EHRVisualization/blob/master/Screenshot/%E5%BD%93%E5%89%8D%E6%95%88%E6%9E%9C.png)
 
 ## Maintainers
 
